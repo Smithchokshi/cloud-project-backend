@@ -5,54 +5,10 @@ const messageModel = require('../Models/messageModel');
 require('dotenv').config();
 
 const stripe = StripeRoute(process.env.STRIPE_KEY);
-const createCheckoutSession = async (req, res) => {
+
+const createOrder = async (req, res) => {
   try {
-    const { location, amount, name, chatId, recipientId } = req.body;
-    const userId = res.locals.user._id.toString();
-
-    console.log(req.body, userId);
-
-    const customer = await stripe.customers.create({
-      metadata: {
-        userId,
-        chatId,
-        recipientId,
-      },
-    });
-
-    const session = await stripe.checkout.sessions.create({
-      line_items: [
-        {
-          price_data: {
-            currency: 'cad',
-            product_data: {
-              name,
-            },
-            unit_amount: amount * 100,
-          },
-          quantity: 1,
-        },
-      ],
-      customer: customer.id,
-      mode: 'payment',
-      success_url: `${process.env.FRONTEND_URL}${location}`,
-      cancel_url: `${process.env.FRONTEND_URL}${location}`,
-    });
-
-    res.status(200).json({
-      status: 200,
-      url: session.url,
-      message: 'Success',
-    });
-  } catch (e) {
-    res.status(500).json({
-      message: e,
-    });
-  }
-};
-
-const createOrder = async (customer, data) => {
-  try {
+    const { customer, data } = req.body;
     const newOrder = new orderModel({
       userId: customer.metadata.userId,
       recipientId: customer.metadata.recipientId,
@@ -80,29 +36,4 @@ const createOrder = async (customer, data) => {
   }
 };
 
-const stripeWebhook = async (request, response) => {
-  try {
-    const sig = request.headers['stripe-signature'];
-
-    let data;
-    let eventType;
-    data = request.body.data.object;
-    eventType = request.body.type;
-
-    if (eventType === 'checkout.session.completed') {
-      stripe.customers
-        .retrieve(data.customer)
-        .then(customer => {
-          createOrder(customer, data);
-        })
-        .catch(err => console.log(err));
-    }
-    response.send().end();
-  } catch (e) {
-    response.status(500).json({
-      message: e,
-    });
-  }
-};
-
-module.exports = { createCheckoutSession, stripeWebhook };
+module.exports = { createOrder };
