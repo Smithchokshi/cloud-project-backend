@@ -9,6 +9,7 @@ const stripe = StripeRoute(process.env.STRIPE_KEY);
 const createOrder = async (req, res) => {
   try {
     const { customer, data } = req.body;
+    console.log(req.body);
     const newOrder = new orderModel({
       userId: customer.metadata.userId,
       recipientId: customer.metadata.recipientId,
