@@ -1,6 +1,8 @@
 const userModel = require('../Models/userModel');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const AWS = require('aws-sdk');
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -179,9 +181,19 @@ const changePasswordPost = async (req, res) => {
 };
 
 const updateProfileImage = async (req, res) => {
-  const { image, email } = req.body;
+  const { image, email, name, type } = req.body;
 
   try {
+    AWS.config.update({
+      region: 'us-east-1',
+    });
+
+    const s3 = new AWS.S3({
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      sessionToken: process.env.AWS_SESSION_TOKEN,
+    });
+
     const oldUser = await userModel.findOne({ email });
     if (!oldUser) {
       return res.json({ status: 'User Not Exists!!' });
@@ -191,12 +203,29 @@ const updateProfileImage = async (req, res) => {
       return res.status(400).json({ msg: 'Please enter an icon url' });
     }
 
+    const imageBuffer = new Buffer.from(image, 'base64');
+
+    const contentType = image.match(/data:(.*);/)[1];
+    console.log(type);
+
+    const params = {
+      Bucket: 'cloudchatapp1',
+      Key: `${email}/${name}`,
+      Body: imageBuffer,
+      ACL: 'public-read',
+      ContentType: contentType,
+    };
+
+    const result = await s3.upload(params).promise();
+
+    console.log('s3', result.Location);
+
     const setImage = await userModel.findByIdAndUpdate({ _id: oldUser._id }, { img: image });
 
     setImage.save();
-    res.status(201).json({ status: 201, img: image });
+    res.status(201).json({ status: 201, img: result.Location });
   } catch (error) {
-    res.status(401).json({ status: 401, error });
+    res.status(500).json({ status: 500, error });
   }
 };
 
