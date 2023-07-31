@@ -191,7 +191,8 @@ const updateProfileImage = async (req, res) => {
     const s3 = new AWS.S3({
       accessKeyId: process.env.AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-      sessionToken: process.env.AWS_SESSION_TOKEN,
+      sessionToken:
+        'FwoGZXIvYXdzEDcaDGA6ejiy3J6Azjl6dCLHAZvxAs7+V5nFNjCc0J6N0HbJbUKP2+JT47jorT++UdDh5zymBi5F1hpJtcOzRK2nkbd/CGU4T1IG556SFdAzLe/6syz7sTGuP/2FvoDsESGmUa/thcBarozlp1y+tjnPZmCIdwYnwP6ZVP4PstFq4XfuVgLC3OgDrOy7AZXPLsCHSoznrzCgQ7xc6cILREFESZsr2yx8gJ+riYR7rvc/YO9FmesprM2Aopis2InUyHdw2p5rT2fvmsvvjkF/uSRDTPjTSQv8kegoyvKepgYyLSCt9G83d102sgLO2Pq6y1GESQ/VGKzHIw9InbIeF/dm2ZHMc7A6so5oApCLlw==',
     });
 
     const oldUser = await userModel.findOne({ email });
