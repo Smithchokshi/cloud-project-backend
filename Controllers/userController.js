@@ -53,6 +53,7 @@ const registerUser = async (req, res) => {
       userData: user,
     });
   } catch (e) {
+    console.log('error', e);
     res.status(500).json({
       message: e,
     });
