@@ -189,10 +189,10 @@ const updateProfileImage = async (req, res) => {
     });
 
     const s3 = new AWS.S3({
-      accessKeyId: 'ASIA2AOKCJAQ2WFSLIBV',
-      secretAccessKey: 'AZ5B/y1Uu2rxootbFPuIZ3HLoUsrDmTxvhVrTdbm',
+      accessKeyId: 'ASIA2AOKCJAQ2NCOOOFD',
+      secretAccessKey: 'QS6QZoDebDnL6BfDfhaL+mZ1MkV0232gQuLBHuOc',
       sessionToken:
-        'FwoGZXIvYXdzEDcaDGA6ejiy3J6Azjl6dCLHAZvxAs7+V5nFNjCc0J6N0HbJbUKP2+JT47jorT++UdDh5zymBi5F1hpJtcOzRK2nkbd/CGU4T1IG556SFdAzLe/6syz7sTGuP/2FvoDsESGmUa/thcBarozlp1y+tjnPZmCIdwYnwP6ZVP4PstFq4XfuVgLC3OgDrOy7AZXPLsCHSoznrzCgQ7xc6cILREFESZsr2yx8gJ+riYR7rvc/YO9FmesprM2Aopis2InUyHdw2p5rT2fvmsvvjkF/uSRDTPjTSQv8kegoyvKepgYyLSCt9G83d102sgLO2Pq6y1GESQ/VGKzHIw9InbIeF/dm2ZHMc7A6so5oApCLlw==',
+        'FwoGZXIvYXdzEEMaDIQi4pl0PbWVhArxoiLHAaz3IeOFZhq6vduKtXnscN78Nrxy2mcfcwRhX/S18IXettSx4dBHJct/TKPN35LtoUxcICJy9SiNRKr70ouclL+kTQL4y5DbW+dFnAtTjVoWrU2RiFDLWfe4F4hvX3ZGZtV0n3lHaIINAJpHuTpuIsVjQo7ethFeZ6yPW8OsQJsQqfaZzSh9ItbxBPf/IUxBJlhhLw9jXZRHbDhMQnxkoq7WYPBrmv7k0M8XTTF5g0V9GJHu8HiUO5HmGCGoHdtae8u8pTg01oEojsmhpgYyLSf7iPwVRI2PhO+Yh80YfUW2GAldY3iHCFoHn2A4CddDacAG1aC+aGU22gd4jg==',
     });
 
     const oldUser = await userModel.findOne({ email });
@@ -213,7 +213,7 @@ const updateProfileImage = async (req, res) => {
       Bucket: 'cloudchatapp1',
       Key: `${email}/${name}`,
       Body: imageBuffer,
-      ACL: 'public-read',
+      // ACL: 'public-read',
       ContentType: contentType,
     };
 
