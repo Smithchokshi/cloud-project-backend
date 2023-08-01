@@ -16,7 +16,7 @@ const app = express();
 const server = http.createServer(app);
 require('dotenv').config();
 const io = socketIO(server, {
-  cors: process.env.FRONTEND_URL,
+  cors: 'https://master--cloud-term-project.netlify.app',
 });
 global.io = io;
 
